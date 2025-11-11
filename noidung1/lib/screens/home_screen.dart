@@ -245,7 +245,6 @@ class _HomeScreenState extends State<HomeScreen> {
       initialDate: provider.selectedMonth,
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
-      locale: const Locale('vi', 'VN'),
     );
     
     if (picked != null) {

@@ -8,7 +8,8 @@ class DateFormatter {
 
   // "Thứ 3, 15/10/2024"
   static String formatLong(DateTime date) {
-    return DateFormat('EEEE, dd/MM/yyyy', 'vi_VN').format(date);
+    // BỎ 'vi_VN' vì không cần thiết
+    return DateFormat('EEEE, dd/MM/yyyy').format(date);
   }
 
   // "Hôm nay", "Hôm qua", hoặc "15/10"
@@ -31,6 +32,12 @@ class DateFormatter {
 
   // "Tháng 10, 2024"
   static String formatMonth(DateTime date) {
-    return DateFormat('MMMM, yyyy', 'vi_VN').format(date);
+    // THAY ĐỔI FORMAT
+    final monthNames = [
+      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4',
+      'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8',
+      'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+    ];
+    return '${monthNames[date.month - 1]}, ${date.year}';
   }
 }

@@ -380,7 +380,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           initialDate: _selectedDate,
           firstDate: DateTime(2020),
           lastDate: DateTime.now(),
-          locale: const Locale('vi', 'VN'),
           builder: (context, child) {
             return Theme(
               data: Theme.of(context).copyWith(

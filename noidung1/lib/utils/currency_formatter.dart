@@ -3,7 +3,8 @@ import 'package:intl/intl.dart';
 class CurrencyFormatter {
   // Format số tiền VND: 50000 -> "50.000 đ"
   static String format(double amount) {
-    final formatter = NumberFormat('#,###', 'vi_VN');
+    // BỎ locale 'vi_VN'
+    final formatter = NumberFormat('#,###');
     return '${formatter.format(amount)} đ';
   }
 

@@ -1,0 +1,33 @@
+// lib/domain/usecases/add_review_usecase.dart
+import 'dart:io';
+
+import 'package:dartz/dartz.dart';
+import 'package:noidung3/data/repositories/review_repository_impl.dart';
+
+class AddReviewUseCase {
+  final ReviewRepository repository;
+  
+  AddReviewUseCase(this.repository);
+  
+  Future<Either<Failure, Unit>> call({
+    required String restaurantId,
+    required double rating,
+    required String comment,
+    required List<File> images,
+  }) async {
+    // Validate
+    if (rating < 1 || rating > 5) {
+      return Left(ValidationFailure('Rating must be between 1 and 5'));
+    }
+    if (comment.trim().isEmpty) {
+      return Left(ValidationFailure('Comment cannot be empty'));
+    }
+    
+    return await repository.addReview(
+      restaurantId: restaurantId,
+      rating: rating,
+      comment: comment,
+      images: images,
+    );
+  }
+}

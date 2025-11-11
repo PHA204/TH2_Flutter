@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/transaction_provider.dart';
 import 'screens/home_screen.dart';
+import 'package:intl/date_symbol_data_local.dart'; 
 
 void main() async {
   // Đảm bảo Flutter đã khởi tạo
   WidgetsFlutterBinding.ensureInitialized();
-  
+  await initializeDateFormatting('vi_VN', null);
   runApp(const MyApp());
 }
 
