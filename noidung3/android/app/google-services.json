@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588558685718",
+    "project_id": "noidung3-th2",
+    "storage_bucket": "noidung3-th2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588558685718:android:9ceac1e34fcc2f0e264737",
+        "android_client_info": {
+          "package_name": "com.example.noidung3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAug67Vo1A7r-LdILRyV9UllBvD2MDNqhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

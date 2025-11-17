@@ -1,19 +1,15 @@
 // lib/presentation/providers/review_provider.dart
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:dartz/dartz.dart';
+import 'package:noidung3/core/errors/failures.dart';
+import 'package:noidung3/domain/usecases/add_review_usecase.dart';
 
 class ReviewProvider extends ChangeNotifier {
-  final Future<dynamic> Function({
-    required String restaurantId,
-    required double rating,
-    required String comment,
-    required List<File> images,
-  }) addReviewUseCase;
-  final Future<dynamic> Function(String) getReviewsUseCase;
-
+  final AddReviewUseCase addReviewUseCase;
+  
   ReviewProvider({
     required this.addReviewUseCase,
-    required this.getReviewsUseCase,
   });
   
   bool _isLoading = false;
@@ -22,10 +18,7 @@ class ReviewProvider extends ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
   
-  List<dynamic> _reviews = [];
-  List<dynamic> get reviews => _reviews;
-  
-  Future<void> addReview({
+  Future<bool> addReview({
     required String restaurantId,
     required double rating,
     required String comment,
@@ -42,27 +35,20 @@ class ReviewProvider extends ChangeNotifier {
       images: images,
     );
     
+    bool success = false;
     result.fold(
-      (failure) => _errorMessage = failure.message,
-      (_) => loadReviews(restaurantId),
+      (failure) {
+        _errorMessage = failure.message;
+        success = false;
+      },
+      (_) {
+        success = true;
+      },
     );
     
     _isLoading = false;
     notifyListeners();
-  }
-  
-  Future<void> loadReviews(String restaurantId) async {
-    _isLoading = true;
-    notifyListeners();
     
-    final result = await getReviewsUseCase(restaurantId);
-    
-    result.fold(
-      (failure) => _errorMessage = failure.message,
-      (reviews) => _reviews = reviews,
-    );
-    
-    _isLoading = false;
-    notifyListeners();
+    return success;
   }
 }

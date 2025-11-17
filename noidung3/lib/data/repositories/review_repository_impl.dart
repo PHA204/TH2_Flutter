@@ -1,27 +1,13 @@
 // lib/data/repositories/review_repository_impl.dart
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:noidung3/core/errors/failures.dart';
 import 'package:noidung3/data/datasources/remote/cloudinary_service.dart';
+import 'package:noidung3/domain/repositories/review_repository.dart';
 
-// Minimal Failure types so this repository can return Either<Failure, Unit>.
-// If you already have a shared Failure implementation in your project,
-// replace these with an import from that file.
-abstract class Failure {
-  final String message;
-  Failure(this.message);
-
-  @override
-  String toString() => message;
-}
-
-class ServerFailure extends Failure {
-  ServerFailure(String message) : super(message);
-}
-
-class ReviewRepositoryImpl {
+class ReviewRepositoryImpl implements ReviewRepository {
   final FirebaseFirestore firestore;
   final CloudinaryService cloudinaryService;
   
@@ -30,6 +16,7 @@ class ReviewRepositoryImpl {
     required this.cloudinaryService,
   });
   
+  @override
   Future<Either<Failure, Unit>> addReview({
     required String restaurantId,
     required double rating,
@@ -37,15 +24,17 @@ class ReviewRepositoryImpl {
     required List<File> images,
   }) async {
     try {
-      // 1. Upload ảnh lên Cloudinary
       List<String> imageUrls = [];
       for (var image in images) {
         final url = await cloudinaryService.uploadImage(image);
         imageUrls.add(url);
       }
       
-      // 2. Lưu review vào Firestore
-      final user = FirebaseAuth.instance.currentUser!;
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return Left(ServerFailure('User not authenticated'));
+      }
+      
       final reviewData = {
         'restaurantId': restaurantId,
         'userId': user.uid,
@@ -57,13 +46,11 @@ class ReviewRepositoryImpl {
       };
       
       await firestore.collection('reviews').add(reviewData);
-      
-      // 3. Cập nhật rating trung bình của nhà hàng
       await _updateRestaurantRating(restaurantId);
       
-      return Right(unit);
+      return const Right(unit);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ServerFailure('Failed to add review: $e'));
     }
   }
   
