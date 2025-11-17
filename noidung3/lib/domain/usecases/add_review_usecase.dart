@@ -1,15 +1,23 @@
 // lib/domain/usecases/add_review_usecase.dart
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
-import 'package:noidung3/data/repositories/review_repository_impl.dart';
+import 'package:noidung3/core/errors/failures.dart';
+import 'package:noidung3/domain/repositories/review_repository.dart'; // Import từ file mới
+
+class ValidationFailure extends Failure {
+  final String message;
+  ValidationFailure(this.message) : super('');
+
+  @override
+  String toString() => 'ValidationFailure: $message';
+}
 
 class AddReviewUseCase {
   final ReviewRepository repository;
   
   AddReviewUseCase(this.repository);
   
-  Future<Either<Failure, Unit>> call({
+  Future<Object> call({
     required String restaurantId,
     required double rating,
     required String comment,
